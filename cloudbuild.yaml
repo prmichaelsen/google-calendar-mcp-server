@@ -41,7 +41,7 @@ steps:
       - '--set-env-vars'
       - 'NODE_ENV=production,LOG_LEVEL=info'
       - '--update-secrets'
-      - 'PLATFORM_SERVICE_TOKEN=google-calendar-platform-service-token:latest,GOOGLE_APPLICATION_CREDENTIALS=google-calendar-service-account-key:latest'
+      - 'PLATFORM_SERVICE_TOKEN=google-calendar-platform-service-token:latest,GOOGLE_APPLICATION_CREDENTIALS=google-calendar-google-application-credentials:latest'
 
 images:
   - 'gcr.io/$PROJECT_ID/google-calendar-mcp-server:$COMMIT_SHA'
