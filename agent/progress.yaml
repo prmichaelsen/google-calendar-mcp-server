@@ -1,0 +1,148 @@
+project:
+  name: google-calendar-mcp-server
+  version: 0.1.0
+  started: 2026-02-13
+  status: in_progress
+  current_milestone: M1
+  description: Multi-tenant Google Calendar MCP server with Platform JWT authentication
+
+milestones:
+  - id: M1
+    name: Project Setup and Infrastructure
+    status: not_started
+    progress: 0%
+    started: null
+    completed: null
+    estimated_weeks: 0.5
+    tasks_completed: 0
+    tasks_total: 5
+    notes: |
+      Setting up project structure, dependencies, and configuration files.
+      This is the foundation for all subsequent work.
+
+  - id: M2
+    name: Authentication Implementation
+    status: not_started
+    progress: 0%
+    started: null
+    completed: null
+    estimated_weeks: 1
+    tasks_completed: 0
+    tasks_total: 0
+    notes: |
+      Implement Platform JWT Provider and Google Credentials Resolver.
+      Will be planned after M1 completion.
+
+  - id: M3
+    name: Server Integration
+    status: not_started
+    progress: 0%
+    started: null
+    completed: null
+    estimated_weeks: 1
+    tasks_completed: 0
+    tasks_total: 0
+    notes: |
+      Integrate authentication with mcp-auth wrapServer.
+      Create main entry point and server factory.
+
+  - id: M4
+    name: Testing and Deployment
+    status: not_started
+    progress: 0%
+    started: null
+    completed: null
+    estimated_weeks: 1
+    tasks_completed: 0
+    tasks_total: 0
+    notes: |
+      Test locally and deploy to Cloud Run.
+      Verify multi-tenant functionality.
+
+tasks:
+  milestone_1:
+    - id: task-1
+      name: Initialize Node.js Project and Install Dependencies
+      status: not_started
+      file: agent/tasks/task-1-initialize-project.md
+      estimated_hours: 0.5
+      completed_date: null
+      notes: |
+        Create project structure and install all dependencies.
+        Foundation for TypeScript development.
+
+    - id: task-2
+      name: Configure TypeScript and Build System
+      status: not_started
+      file: agent/tasks/task-2-configure-typescript.md
+      estimated_hours: 0.5
+      completed_date: null
+      notes: |
+        Set up tsconfig.json and build scripts.
+        To be created.
+
+    - id: task-3
+      name: Create Environment Configuration Files
+      status: not_started
+      file: agent/tasks/task-3-environment-config.md
+      estimated_hours: 0.5
+      completed_date: null
+      notes: |
+        Create .env.example with all required variables.
+        To be created.
+
+    - id: task-4
+      name: Create Docker and Cloud Build Configurations
+      status: not_started
+      file: agent/tasks/task-4-docker-cloudbuild.md
+      estimated_hours: 1
+      completed_date: null
+      notes: |
+        Set up Dockerfile and cloudbuild.yaml for deployment.
+        To be created.
+
+    - id: task-5
+      name: Create Project Documentation
+      status: not_started
+      file: agent/tasks/task-5-documentation.md
+      estimated_hours: 1
+      completed_date: null
+      notes: |
+        Write comprehensive README.md.
+        To be created.
+
+documentation:
+  design_documents: 1
+  milestone_documents: 1
+  pattern_documents: 1
+  task_documents: 1
+
+progress:
+  planning: 30%
+  implementation: 0%
+  overall: 15%
+
+recent_work:
+  - date: 2026-02-13
+    description: Initial ACP setup and project planning
+    items:
+      - ✅ Created requirements.md with complete project requirements
+      - ✅ Created milestone-1-project-setup.md
+      - ✅ Created task-1-initialize-project.md
+      - ✅ Created progress.yaml for tracking
+      - ✅ Reviewed bootstrap.md pattern
+      - 📋 Ready to begin implementation
+
+next_steps:
+  - Execute task-1-initialize-project.md
+  - Create remaining task documents for Milestone 1
+  - Begin implementation of authentication providers
+
+notes:
+  - Project uses service account authentication (not OAuth)
+  - Platform API must provide user email addresses
+  - Reference implementation at /home/prmichaelsen/agentbase-mcp-server
+  - All tools must be prefixed with google_*
+  - Target deployment: Google Cloud Run
+
+current_blockers: []
