@@ -3,7 +3,6 @@
 import { wrapServer } from '@prmichaelsen/mcp-auth';
 import { createGoogleCalendarServer } from '@prmichaelsen/google-calendar-mcp/factory';
 import { PlatformJWTProvider } from './auth/platform-jwt-provider.js';
-import { GoogleCredentialsResolver } from './auth/google-credentials-resolver.js';
 
 // Configuration from environment
 const config = {
@@ -13,7 +12,9 @@ const config = {
   },
   google: {
     serviceAccountKeyPath: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
-    calendarId: process.env.GOOGLE_CALENDAR_ID || 'primary'
+    calendarId: process.env.GOOGLE_CALENDAR_ID || 'primary',
+    // Shared service account email for all users (e.g., support@agentbase.me)
+    serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || 'support@agentbase.me'
   },
   server: {
     port: parseInt(process.env.PORT || '8080')
@@ -36,7 +37,7 @@ if (!config.google.serviceAccountKeyPath) {
   process.exit(1);
 }
 
-// Create authentication providers
+// Create authentication provider
 const authProvider = new PlatformJWTProvider({
   serviceToken: config.platform.serviceToken,
   issuer: 'agentbase.me',
@@ -45,18 +46,12 @@ const authProvider = new PlatformJWTProvider({
   cacheTtl: 60000 // 1 minute
 });
 
-const credentialsResolver = new GoogleCredentialsResolver({
-  platformUrl: config.platform.url,
-  authProvider: authProvider,
-  cacheCredentials: true,
-  cacheTtl: 300000 // 5 minutes
-});
-
 // Wrap the Google Calendar server factory with authentication
 const wrappedServer = wrapServer({
   // Server factory: creates a new Google Calendar server per user
-  serverFactory: (userEmail: string, userId: string) => {
-    return createGoogleCalendarServer(userEmail, userId, {
+  // All users share the same service account email
+  serverFactory: (_token: string, userId: string) => {
+    return createGoogleCalendarServer(config.google.serviceAccountEmail, userId, {
       serviceAccountKeyPath: config.google.serviceAccountKeyPath,
       calendarId: config.google.calendarId
     });
@@ -64,8 +59,8 @@ const wrappedServer = wrapServer({
   
   // Authentication
   authProvider,
-  tokenResolver: credentialsResolver,
-  resourceType: 'google-calendar', // Platform API endpoint: /api/credentials/google-calendar
+  tokenResolver: undefined, // No token resolver needed - using shared email
+  resourceType: 'google-calendar',
   
   // Transport
   transport: {
@@ -96,6 +91,7 @@ async function main() {
   try {
     await wrappedServer.start();
     console.log(`Google Calendar MCP Server running on port ${config.server.port}`);
+    console.log(`Using shared service account: ${config.google.serviceAccountEmail}`);
     console.log(`Endpoint: http://0.0.0.0:${config.server.port}/mcp`);
     console.log('Ready to accept requests');
   } catch (error) {
