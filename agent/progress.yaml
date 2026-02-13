@@ -9,12 +9,12 @@ project:
 milestones:
   - id: M1
     name: Project Setup and Infrastructure
-    status: not_started
-    progress: 0%
-    started: null
+    status: in_progress
+    progress: 20%
+    started: 2026-02-13
     completed: null
     estimated_weeks: 0.5
-    tasks_completed: 0
+    tasks_completed: 1
     tasks_total: 5
     notes: |
       Setting up project structure, dependencies, and configuration files.
@@ -63,13 +63,17 @@ tasks:
   milestone_1:
     - id: task-1
       name: Initialize Node.js Project and Install Dependencies
-      status: not_started
+      status: completed
       file: agent/tasks/task-1-initialize-project.md
       estimated_hours: 0.5
-      completed_date: null
+      completed_date: 2026-02-13
       notes: |
-        Create project structure and install all dependencies.
-        Foundation for TypeScript development.
+        ✅ Created src/ and src/auth/ directories
+        ✅ Created package.json with ES modules
+        ✅ Installed all production dependencies
+        ✅ Installed all development dependencies
+        ✅ Updated to latest google-calendar-mcp (v2.1.0)
+        ✅ .gitignore already exists
 
     - id: task-2
       name: Configure TypeScript and Build System
@@ -119,10 +123,22 @@ documentation:
 
 progress:
   planning: 30%
-  implementation: 0%
-  overall: 15%
+  implementation: 20%
+  overall: 25%
 
 recent_work:
+  - date: 2026-02-13
+    description: Task 1 completed - Project initialized
+    items:
+      - ✅ Created src/ and src/auth/ directory structure
+      - ✅ Created package.json with ES modules configuration
+      - ✅ Installed @modelcontextprotocol/sdk@1.26.0
+      - ✅ Installed @prmichaelsen/google-calendar-mcp@2.1.0
+      - ✅ Installed @prmichaelsen/mcp-auth@7.0.4
+      - ✅ Installed jsonwebtoken@9.0.3
+      - ✅ Installed all TypeScript dev dependencies
+      - ✅ All dependencies installed without vulnerabilities
+      
   - date: 2026-02-13
     description: Initial ACP setup and project planning
     items:
@@ -131,12 +147,13 @@ recent_work:
       - ✅ Created task-1-initialize-project.md
       - ✅ Created progress.yaml for tracking
       - ✅ Reviewed bootstrap.md pattern
-      - 📋 Ready to begin implementation
+      - ✅ Initial git commit created
 
 next_steps:
-  - Execute task-1-initialize-project.md
+  - Create task-2-configure-typescript.md
+  - Configure TypeScript with tsconfig.json
   - Create remaining task documents for Milestone 1
-  - Begin implementation of authentication providers
+  - Continue with Milestone 1 tasks
 
 notes:
   - Project uses service account authentication (not OAuth)

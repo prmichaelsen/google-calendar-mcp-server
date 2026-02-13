@@ -1,0 +1,38 @@
+{
+  "name": "@prmichaelsen/google-calendar-mcp-server",
+  "version": "1.0.0",
+  "description": "Multi-tenant Google Calendar MCP server with Platform JWT authentication",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "google-calendar",
+    "gmail",
+    "multi-tenant",
+    "jwt",
+    "authentication",
+    "platform"
+  ],
+  "author": "prmichaelsen",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@prmichaelsen/google-calendar-mcp": "^2.1.0",
+    "@prmichaelsen/mcp-auth": "^7.0.4",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^22.19.11",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
