@@ -1,4 +1,5 @@
 import type { AuthProvider, AuthResult, RequestContext } from '@prmichaelsen/mcp-auth';
+import type { PlatformJWTProvider } from '../auth/platform-jwt-provider.js';
 
 export interface PlatformJWTProviderConfig {
   serviceToken: string;      // Shared secret for JWT validation
@@ -12,4 +13,21 @@ export interface CachedAuthResult {
   result: AuthResult;
   expiresAt: number;
   jwtToken: string;
+}
+
+export interface GoogleCredentialsResolverConfig {
+  platformUrl: string;
+  authProvider: PlatformJWTProvider;
+  cacheCredentials?: boolean;
+  cacheTtl?: number;
+}
+
+export interface CachedCredentials {
+  email: string;
+  expiresAt: number;
+}
+
+export interface CredentialsAPIResponse {
+  access_token: string;  // Contains email address
+  expires_at?: number;   // Optional (not used for emails)
 }
