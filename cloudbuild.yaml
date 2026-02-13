@@ -39,7 +39,7 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'NODE_ENV=production,PORT=8080,LOG_LEVEL=info'
+      - 'NODE_ENV=production,LOG_LEVEL=info'
       - '--update-secrets'
       - 'PLATFORM_SERVICE_TOKEN=google-calendar-platform-service-token:latest,GOOGLE_APPLICATION_CREDENTIALS=google-calendar-service-account-key:latest'
 
