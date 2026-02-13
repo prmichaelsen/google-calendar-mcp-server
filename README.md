@@ -210,9 +210,9 @@ docker run -p 8080:8080 \
 
 1. **Set up secrets**:
    ```bash
-   # Create secrets
-   echo -n "your-service-token" | gcloud secrets create platform-service-token --data-file=-
-   gcloud secrets create google-service-account-key --data-file=/path/to/key.json
+   # Create secrets with google-calendar-* prefix
+   echo -n "your-service-token" | gcloud secrets create google-calendar-platform-service-token --data-file=-
+   gcloud secrets create google-calendar-service-account-key --data-file=/path/to/key.json
    ```
 
 2. **Deploy via Cloud Build**:
@@ -234,7 +234,7 @@ gcloud run deploy google-calendar-mcp-server \
   --platform managed \
   --allow-unauthenticated \
   --set-env-vars PLATFORM_URL=https://your-platform.com \
-  --update-secrets PLATFORM_SERVICE_TOKEN=platform-service-token:latest,GOOGLE_APPLICATION_CREDENTIALS=google-service-account-key:latest
+  --update-secrets PLATFORM_SERVICE_TOKEN=google-calendar-platform-service-token:latest,GOOGLE_APPLICATION_CREDENTIALS=google-calendar-service-account-key:latest
 ```
 
 ## Usage
