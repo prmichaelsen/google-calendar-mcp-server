@@ -1,5 +1,121 @@
 #!/usr/bin/env node
 
-console.log('Google Calendar MCP Server - Starting...');
+import { wrapServer } from '@prmichaelsen/mcp-auth';
+import { createGoogleCalendarServer } from '@prmichaelsen/google-calendar-mcp/factory';
+import { PlatformJWTProvider } from './auth/platform-jwt-provider.js';
+import { GoogleCredentialsResolver } from './auth/google-credentials-resolver.js';
 
-// TODO: Implement server in next tasks
+// Configuration from environment
+const config = {
+  platform: {
+    url: process.env.PLATFORM_URL!,
+    serviceToken: process.env.PLATFORM_SERVICE_TOKEN!
+  },
+  google: {
+    serviceAccountKeyPath: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
+    calendarId: process.env.GOOGLE_CALENDAR_ID || 'primary'
+  },
+  server: {
+    port: parseInt(process.env.PORT || '8080')
+  }
+};
+
+// Validate configuration
+if (!config.platform.serviceToken) {
+  console.error('Error: PLATFORM_SERVICE_TOKEN environment variable is required');
+  process.exit(1);
+}
+
+if (!config.platform.url) {
+  console.error('Error: PLATFORM_URL environment variable is required');
+  process.exit(1);
+}
+
+if (!config.google.serviceAccountKeyPath) {
+  console.error('Error: GOOGLE_APPLICATION_CREDENTIALS environment variable is required');
+  process.exit(1);
+}
+
+// Create authentication providers
+const authProvider = new PlatformJWTProvider({
+  serviceToken: config.platform.serviceToken,
+  issuer: 'agentbase.me',
+  audience: 'mcp-server',
+  cacheResults: true,
+  cacheTtl: 60000 // 1 minute
+});
+
+const credentialsResolver = new GoogleCredentialsResolver({
+  platformUrl: config.platform.url,
+  authProvider: authProvider,
+  cacheCredentials: true,
+  cacheTtl: 300000 // 5 minutes
+});
+
+// Wrap the Google Calendar server factory with authentication
+const wrappedServer = wrapServer({
+  // Server factory: creates a new Google Calendar server per user
+  serverFactory: (userEmail: string, userId: string) => {
+    return createGoogleCalendarServer(userEmail, userId, {
+      serviceAccountKeyPath: config.google.serviceAccountKeyPath,
+      calendarId: config.google.calendarId
+    });
+  },
+  
+  // Authentication
+  authProvider,
+  tokenResolver: credentialsResolver,
+  resourceType: 'google', // Tools will be prefixed with google_*
+  
+  // Transport
+  transport: {
+    type: 'sse',
+    port: config.server.port,
+    host: '0.0.0.0',
+    basePath: '/mcp',
+    cors: true,
+    corsOrigin: process.env.CORS_ORIGIN || 'https://agentbase.me'
+  },
+  
+  // Optional middleware
+  middleware: {
+    rateLimit: {
+      enabled: true,
+      maxRequests: 100,
+      windowMs: 60 * 60 * 1000 // 1 hour per user
+    },
+    logging: {
+      enabled: true,
+      level: (process.env.LOG_LEVEL as 'info' | 'debug' | 'warn' | 'error') || 'info'
+    }
+  }
+});
+
+// Start server
+async function main() {
+  try {
+    await wrappedServer.start();
+    console.log(`Google Calendar MCP Server running on port ${config.server.port}`);
+    console.log(`Endpoint: http://0.0.0.0:${config.server.port}/mcp`);
+    console.log('Ready to accept requests');
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down gracefully...');
+  await wrappedServer.stop();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('Shutting down gracefully...');
+  await wrappedServer.stop();
+  process.exit(0);
+});
+
+// Start the server
+main();
