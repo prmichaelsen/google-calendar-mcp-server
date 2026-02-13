@@ -22,16 +22,16 @@ milestones:
 
   - id: M2
     name: Authentication Implementation
-    status: not_started
-    progress: 0%
-    started: null
+    status: in_progress
+    progress: 25%
+    started: 2026-02-13
     completed: null
     estimated_weeks: 1
-    tasks_completed: 0
-    tasks_total: 0
+    tasks_completed: 1
+    tasks_total: 4
     notes: |
-      Implement Platform JWT Provider and Google Credentials Resolver.
-      Will be planned after M1 completion.
+      Implementing Platform JWT Provider and Google Credentials Resolver.
+      Task 6 complete - JWT validation working.
 
   - id: M3
     name: Server Integration
@@ -133,18 +133,80 @@ tasks:
         ✅ Documented security best practices
         ✅ Added troubleshooting section
 
+  milestone_2:
+    - id: task-6
+      name: Implement Platform JWT Provider
+      status: completed
+      file: agent/tasks/task-6-platform-jwt-provider.md
+      estimated_hours: 2
+      completed_date: 2026-02-13
+      notes: |
+        ✅ Created src/types/auth.ts with type definitions
+        ✅ Implemented PlatformJWTProvider class
+        ✅ JWT validation with signature verification
+        ✅ Issuer and audience validation
+        ✅ Expiration checking
+        ✅ userId extraction from claims
+        ✅ Token caching with TTL
+        ✅ Comprehensive error handling
+        ✅ TypeScript compiles without errors
+
+    - id: task-7
+      name: Implement Google Credentials Resolver
+      status: not_started
+      file: agent/tasks/task-7-google-credentials-resolver.md
+      estimated_hours: 2
+      completed_date: null
+      notes: |
+        Resolve user emails from platform API.
+        To be created.
+
+    - id: task-8
+      name: Add Authentication Tests
+      status: not_started
+      file: agent/tasks/task-8-authentication-tests.md
+      estimated_hours: 2
+      completed_date: null
+      notes: |
+        Unit and integration tests for authentication.
+        To be created.
+
+    - id: task-9
+      name: Integrate with mcp-auth Framework
+      status: not_started
+      file: agent/tasks/task-9-mcp-auth-integration.md
+      estimated_hours: 2
+      completed_date: null
+      notes: |
+        Wire up authentication in main server.
+        To be created.
+
 documentation:
   design_documents: 1
-  milestone_documents: 1
+  milestone_documents: 2
   pattern_documents: 1
-  task_documents: 1
+  task_documents: 6
 
 progress:
-  planning: 40%
-  implementation: 100%
-  overall: 70%
+  planning: 50%
+  implementation: 25%
+  overall: 37%
 
 recent_work:
+  - date: 2026-02-13
+    description: Task 6 completed - Platform JWT Provider
+    items:
+      - ✅ Created src/types/auth.ts with type definitions
+      - ✅ Implemented PlatformJWTProvider class
+      - ✅ JWT validation with jsonwebtoken library
+      - ✅ Signature, issuer, audience, expiration checks
+      - ✅ userId extraction from JWT claims
+      - ✅ Token caching with configurable TTL (1 minute default)
+      - ✅ JWT token storage for credentials resolver
+      - ✅ Comprehensive error handling (expired, invalid, missing claims)
+      - ✅ TypeScript compiles without errors
+      - ✅ Milestone 2 started (25% complete)
+      
   - date: 2026-02-13
     description: Milestone 1 COMPLETED - Project Setup
     items:
@@ -215,10 +277,10 @@ recent_work:
       - ✅ Initial git commit created
 
 next_steps:
-  - Plan Milestone 2: Authentication Implementation
-  - Create tasks for Platform JWT Provider
-  - Create tasks for Google Credentials Resolver
-  - Begin implementing authentication components
+  - Create task-7-google-credentials-resolver.md
+  - Implement Google Credentials Resolver
+  - Create remaining task documents for Milestone 2
+  - Continue with authentication implementation
 
 notes:
   - Project uses service account authentication (not OAuth)
