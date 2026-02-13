@@ -52,7 +52,7 @@ const wrappedServer = wrapServer({
   // All users share the same service account email
   serverFactory: (_token: string, userId: string) => {
     return createGoogleCalendarServer(config.google.serviceAccountEmail, userId, {
-      serviceAccountKeyPath: config.google.serviceAccountKeyPath,
+      serviceAccountKey: config.google.serviceAccountKeyPath, // Can be path, JSON string, or object
       calendarId: config.google.calendarId
     });
   },
