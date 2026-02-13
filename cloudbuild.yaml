@@ -2,7 +2,7 @@ steps:
   # Install dependencies
   - name: 'node:18'
     entrypoint: npm
-    args: ['install']
+    args: ['ci']
   
   # Build TypeScript
   - name: 'node:18'
