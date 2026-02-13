@@ -65,7 +65,13 @@ const SKIP_VARS = new Set([
   'NODE_ENV',
   'PORT',
   'LOG_LEVEL',
-  'PLATFORM_URL'  // Public URL, not a secret
+  'PLATFORM_URL',  // Public URL, not a secret
+  'GOOGLE_CALENDAR_ID'  // Not a secret, just a calendar ID
+]);
+
+// Variables that are file paths (need special handling)
+const FILE_PATH_VARS = new Set([
+  'GOOGLE_APPLICATION_CREDENTIALS'
 ]);
 
 // Read and parse .env file
@@ -109,7 +115,20 @@ for (const line of lines) {
       cleanValue = cleanValue.slice(1, -1);
     }
     
-    if (cleanValue) {
+    // Handle file path variables (read file contents)
+    if (FILE_PATH_VARS.has(key) && cleanValue) {
+      try {
+        console.log(`📄 Reading file for ${key}: ${cleanValue}`);
+        const fileContent = readFileSync(cleanValue, 'utf-8');
+        secrets[key] = fileContent;
+        console.log(`✅ Loaded ${key} from file (${fileContent.length} bytes)`);
+      } catch (error) {
+        console.warn(`⚠️  Could not read file for ${key}: ${cleanValue}`);
+        console.warn(`   ${(error as Error).message}`);
+        console.warn(`   Skipping ${key}`);
+        continue;
+      }
+    } else if (cleanValue) {
       secrets[key] = cleanValue;
     }
   }
@@ -122,7 +141,16 @@ if (Object.keys(secrets).length === 0) {
 
 console.log(`\nFound ${Object.keys(secrets).length} secrets to upload:`);
 Object.keys(secrets).forEach(key => {
-  const preview = secrets[key].substring(0, 10) + '...';
+  const value = secrets[key];
+  let preview: string;
+  
+  // For file contents (JSON), show type instead of preview
+  if (FILE_PATH_VARS.has(key)) {
+    preview = `<file content, ${value.length} bytes>`;
+  } else {
+    preview = value.substring(0, 10) + '...';
+  }
+  
   console.log(`  - ${key}: ${preview}`);
 });
 
