@@ -344,15 +344,43 @@ All tools are prefixed with `google_*`:
 - Verify file exists and is readable
 - Ensure key is valid JSON
 
+## Scripts
+
+### `npm run upload-secrets`
+
+Uploads secrets from `.env` to Google Cloud Secret Manager with proper naming:
+
+```bash
+# Upload all secrets from .env
+npm run upload-secrets -- --service google-calendar
+
+# Specify custom env file
+npm run upload-secrets -- --service google-calendar --env-file .env.production
+
+# Specify project
+npm run upload-secrets -- --service google-calendar --project my-project-id
+```
+
+The script:
+- Reads secrets from `.env` file
+- Prefixes secret names with `google-calendar-*`
+- Creates or updates secrets in Secret Manager
+- Skips non-secret variables (PORT, NODE_ENV, etc.)
+- Provides summary of uploaded secrets
+
 ## Project Structure
 
 ```
 google-calendar-mcp-server/
 ├── src/
 │   ├── index.ts                      # Main entry point
-│   └── auth/
-│       ├── platform-jwt-provider.ts  # JWT validation
-│       └── google-credentials-resolver.ts  # Email resolution
+│   ├── auth/
+│   │   ├── platform-jwt-provider.ts  # JWT validation
+│   │   └── google-credentials-resolver.ts  # Email resolution
+│   └── types/
+│       └── auth.ts                   # Type definitions
+├── scripts/
+│   └── upload-secrets.ts             # Secret upload utility
 ├── dist/                             # Compiled JavaScript
 ├── agent/                            # ACP documentation
 ├── package.json                      # Dependencies

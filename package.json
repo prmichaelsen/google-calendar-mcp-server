@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "upload-secrets": "tsx scripts/upload-secrets.ts"
   },
   "keywords": [
     "mcp",
