@@ -65,7 +65,7 @@ const wrappedServer = wrapServer({
   // Authentication
   authProvider,
   tokenResolver: credentialsResolver,
-  resourceType: 'google', // Tools will be prefixed with google_*
+  resourceType: 'google-calendar', // Platform API endpoint: /api/credentials/google-calendar
   
   // Transport
   transport: {
