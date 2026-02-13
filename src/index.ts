@@ -11,7 +11,8 @@ const config = {
     serviceToken: process.env.PLATFORM_SERVICE_TOKEN!
   },
   google: {
-    serviceAccountKeyPath: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
+    // GOOGLE_APPLICATION_CREDENTIALS can be a file path or JSON string (from Secret Manager)
+    serviceAccountKey: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
     calendarId: process.env.GOOGLE_CALENDAR_ID || 'primary',
     // Shared service account email for all users (e.g., support@agentbase.me)
     serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || 'support@agentbase.me'
@@ -32,7 +33,7 @@ if (!config.platform.url) {
   process.exit(1);
 }
 
-if (!config.google.serviceAccountKeyPath) {
+if (!config.google.serviceAccountKey) {
   console.error('Error: GOOGLE_APPLICATION_CREDENTIALS environment variable is required');
   process.exit(1);
 }
@@ -52,7 +53,7 @@ const wrappedServer = wrapServer({
   // All users share the same service account email
   serverFactory: (_token: string, userId: string) => {
     return createGoogleCalendarServer(config.google.serviceAccountEmail, userId, {
-      serviceAccountKey: config.google.serviceAccountKeyPath, // Can be path, JSON string, or object
+      serviceAccountKey: config.google.serviceAccountKey, // Can be path, JSON string, or object
       calendarId: config.google.calendarId
     });
   },
