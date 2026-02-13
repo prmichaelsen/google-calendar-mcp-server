@@ -39,3 +39,5 @@ temp/
 
 # OS
 Thumbs.db
+
+service-account-key.json
